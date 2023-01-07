@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public static class ColorHelper
@@ -120,6 +119,18 @@ public static class ColorHelper
         }
     }
 
+    public static CMYColor Gray
+    {
+        get
+        {
+            return new CMYColor
+            {
+                c = 0.5f,
+                m = 0.5f,
+                y = 0.5f
+            };
+        }
+    }
 
     public static CMYColor DarkPurple
     {
@@ -185,7 +196,6 @@ public static class ColorHelper
         }
     }
 
-
     public static CMYColor ConvertRGBToCMYColor(Color color)
     {
         return new CMYColor
@@ -202,7 +212,8 @@ public static class ColorHelper
         {
             r = 1 - color.c,
             g = 1 - color.m,
-            b = 1 - color.y
+            b = 1 - color.y,
+            a = 1
         };
     }
 

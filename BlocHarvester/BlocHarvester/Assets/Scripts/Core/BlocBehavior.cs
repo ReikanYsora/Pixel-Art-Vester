@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class BlocBehavior : MonoBehaviour
@@ -6,6 +7,7 @@ public class BlocBehavior : MonoBehaviour
     private Material _material;
     private CMYColor _color;
     public bool IsHarvestable;
+    public TMP_Text _quantityText;
     #endregion
 
     #region PROPERTIES
@@ -48,6 +50,21 @@ public class BlocBehavior : MonoBehaviour
     public void Initialize()
     {
         IsHarvestable = true;
+    }
+
+    public void SetQuantity(int quantity)
+    {
+        if (_quantityText != null)
+        {
+            if (quantity == -1)
+            {
+                _quantityText.text = string.Empty;
+            }
+            else
+            {
+                _quantityText.text = quantity.ToString();
+            }
+        }
     }
     #endregion
 }

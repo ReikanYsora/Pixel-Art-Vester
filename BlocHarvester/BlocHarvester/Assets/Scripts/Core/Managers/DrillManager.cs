@@ -40,4 +40,22 @@ public class DrillManager : MonoBehaviour
         }
     }
     #endregion
+
+    #region METHODS
+    public void DrillForStart()
+    {
+        foreach (GameObject tempDrill in _drills)
+        {
+            tempDrill.GetComponent<DrillBehavior>().StartHarvest(false);
+        }
+    }
+
+    public void CreateNewDrillAtLine(int line)
+    {
+        GameObject tempDrill = GameObject.Instantiate(_drillPrefab, new Vector3(-_offset, 0f, line), Quaternion.identity);
+        tempDrill.transform.SetParent(_drillsAnchor);
+
+        _drills[line] = tempDrill;
+    }
+    #endregion
 }

@@ -1,35 +1,46 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class DrillBehavior : MonoBehaviour
 {
     #region ATTRIBUTES
     [SerializeField] private LayerMask _blocLayer;
-    private Vector3 _originalPosition;
     [SerializeField] private MeshCollider _collider;
     [SerializeField] private Transform _screw;
     [SerializeField] private float _screwRotateSpeed;
     [SerializeField] private float _blocDetectionRange;
     private List<CMYColor> _currentHarvest;
+    private bool _realMode;
     #endregion
 
     #region PROPERTIES
-    public bool HarvestEnabled { private set; get; }
+    private bool IsInitialized { set; get; }
+
+    public bool HarvestEnabled
+    {
+        set
+        {
+            _collider.enabled = !value;
+        }
+        get
+        {
+            return !_collider.enabled;
+        }
+    }
     #endregion
 
     #region UNITY METHODS
     private void Awake()
     {
-        _originalPosition = transform.position;
+        _collider.enabled = false;
     }
 
     private void Update()
     {
         _screw.Rotate(new Vector3(_screwRotateSpeed * Time.deltaTime, 0f, 0f));
 
-        if (HarvestEnabled)
+        if (IsInitialized && HarvestEnabled)
         {
             Harvest();
         }
@@ -41,26 +52,32 @@ public class DrillBehavior : MonoBehaviour
     {
         CMYColor tempColor = MatrixManager.Instance.HarvestBloc(Mathf.CeilToInt(transform.position.x), Mathf.CeilToInt(transform.position.z));
 
-        if (tempColor != null)
+        if ((_realMode) && (tempColor != null))
         {
             _currentHarvest.Add(tempColor);
         }
     }
     #endregion
 
-    public void StartHarvest()
+    public void StartHarvest(bool realMode)
     {
         HarvestEnabled = true;
-        _collider.enabled = !HarvestEnabled;
-        _currentHarvest = new List<CMYColor>();
+        _realMode = realMode;
 
-        transform.DOMoveX(MatrixManager.Instance.GetXWidth() + 3, 2f).OnComplete(() =>
+        Vector3 transformPosition = transform.position;
+
+        transform.DOMoveX(20f, 2f).OnComplete(() =>
         {
             GameManager.Instance.ProcessHarvest(new List<CMYColor>(_currentHarvest));
-            _currentHarvest.Clear();
-            transform.DOMove(_originalPosition, 0f);
-            HarvestEnabled = false;
-            _collider.enabled = !HarvestEnabled;
+            DrillManager.Instance.CreateNewDrillAtLine((int)transformPosition.z);
+            Destroy(gameObject);
         });
+    }
+
+    public void Initialize()
+    {
+        IsInitialized = true;
+        _currentHarvest = new List<CMYColor>();
+        HarvestEnabled = false;
     }
 }

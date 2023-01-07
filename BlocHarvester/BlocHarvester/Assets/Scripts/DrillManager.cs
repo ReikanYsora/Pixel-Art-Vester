@@ -40,5 +40,4 @@ public class DrillManager : MonoBehaviour
         }
     }
     #endregion
-
 }

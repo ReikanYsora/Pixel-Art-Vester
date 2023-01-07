@@ -1,5 +1,7 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class DrillBehavior : MonoBehaviour
 {
@@ -10,8 +12,11 @@ public class DrillBehavior : MonoBehaviour
     [SerializeField] private Transform _screw;
     [SerializeField] private float _screwRotateSpeed;
     [SerializeField] private float _blocDetectionRange;
-    private bool _isEnabled;
+    private List<CMYColor> _currentHarvest;
+    #endregion
 
+    #region PROPERTIES
+    public bool HarvestEnabled { private set; get; }
     #endregion
 
     #region UNITY METHODS
@@ -24,29 +29,38 @@ public class DrillBehavior : MonoBehaviour
     {
         _screw.Rotate(new Vector3(_screwRotateSpeed * Time.deltaTime, 0f, 0f));
 
-        if (_isEnabled)
+        if (HarvestEnabled)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(transform.position, Vector3.right, out hit, _blocDetectionRange, _blocLayer))
-            {
-                MatrixManager.Instance.HarvestBloc((int)hit.collider.gameObject.transform.position.x, (int) hit.collider.gameObject.transform.position.z);
-            }
+            Harvest();
         }
     }
     #endregion
 
-    public void StartDestroyBlocs()
+    #region METHOD
+    private void Harvest()
     {
-        _isEnabled = true;
-        _collider.enabled = false;
+        CMYColor tempColor = MatrixManager.Instance.HarvestBloc(Mathf.CeilToInt(transform.position.x), Mathf.CeilToInt(transform.position.z));
+
+        if (tempColor != null)
+        {
+            _currentHarvest.Add(tempColor);
+        }
+    }
+    #endregion
+
+    public void StartHarvest()
+    {
+        HarvestEnabled = true;
+        _collider.enabled = !HarvestEnabled;
+        _currentHarvest = new List<CMYColor>();
 
         transform.DOMoveX(MatrixManager.Instance.GetXWidth() + 3, 2f).OnComplete(() =>
         {
+            GameManager.Instance.ProcessHarvest(new List<CMYColor>(_currentHarvest));
+            _currentHarvest.Clear();
             transform.DOMove(_originalPosition, 0f);
-            _collider.enabled = true;
-            _isEnabled = false;
+            HarvestEnabled = false;
+            _collider.enabled = !HarvestEnabled;
         });
     }
 }

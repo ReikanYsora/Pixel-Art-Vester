@@ -5,6 +5,7 @@ public class InputManager : MonoBehaviour
 {
     #region ATTRIBUTES
     [SerializeField] private LayerMask _drillButton;
+    [SerializeField] private LayerMask _bloc;
     private List<GameObject> _drillsSelection;
     #endregion
 
@@ -25,9 +26,7 @@ public class InputManager : MonoBehaviour
 
         _drillsSelection = new List<GameObject>();
     }
-    #endregion
 
-    #region UNITY METHODS
     private void Update()
     {
         if (Input.GetMouseButton(0))
@@ -48,10 +47,34 @@ public class InputManager : MonoBehaviour
             foreach (GameObject tempDrill in _drillsSelection)
             {
                 DrillBehavior behavior = tempDrill.GetComponentInParent<DrillBehavior>();
-                behavior.StartDestroyBlocs();
+                behavior.StartHarvest();
             }
 
             _drillsSelection.Clear();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 200, _bloc))
+            {
+                if (hit.collider.gameObject.GetComponent<BlocBehavior>() != null)
+                {
+                    hit.collider.gameObject.GetComponent<BlocBehavior>().Color = GameManager.Instance.Paint();
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.PageDown))
+        {
+            GameManager.Instance.NextPaint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.PageUp))
+        {
+            GameManager.Instance.PrevPaint();
         }
     }
     #endregion

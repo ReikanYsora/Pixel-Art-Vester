@@ -42,10 +42,12 @@ public class MatrixManager : MonoBehaviour
             }
 		}
 	}
-    private void CreateBloc(int X, int Y)
+
+    public void CreateBloc(int X, int Y)
     {
         GameObject tempBloc = GameObject.Instantiate(BlocPrefab, new Vector3(X, 0, Y), Quaternion.identity);
         tempBloc.transform.SetParent(BlocAnchor);
+        tempBloc.name = string.Format($"Bloc_{X}_{Y}");
 
         if (_blocs != null)
         {
@@ -73,10 +75,29 @@ public class MatrixManager : MonoBehaviour
         return _blocs[x, y];
     }
 
-    public void HarvestBloc(int X, int Y)
+    public CMYColor HarvestBloc(int X, int Y)
     {
-        Destroy(_blocs[X, Y]);
-        CreateBloc(X, Y);
+        if ((X < XWidth) && (Y < YWidth))
+        {
+            BlocBehavior tempBloc = _blocs[X, Y].GetComponent<BlocBehavior>();
+
+            if ((tempBloc != null) && (tempBloc.IsHarvestable))
+            {
+                CMYColor tempColor = _blocs[X, Y].GetComponent<BlocBehavior>().Color;
+                Destroy(_blocs[X, Y]);
+                CreateBloc(X, Y);
+
+                return tempColor;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
     }
     #endregion
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -36,7 +35,7 @@ public class InputManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100, _drillButton))
+            if (Physics.Raycast(ray, out hit, 200, _drillButton))
             {
                 if (!_drillsSelection.Contains(hit.transform.gameObject))
                 {

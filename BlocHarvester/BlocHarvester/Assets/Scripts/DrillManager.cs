@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DrillManager : MonoBehaviour
@@ -9,7 +10,22 @@ public class DrillManager : MonoBehaviour
     private GameObject[] _drills;
     #endregion
 
+    #region PROPERTIES
+    public static DrillManager Instance { get; private set; }
+    #endregion
+
     #region UNITY METHODS
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+
+        Instance = this;
+    }
+
     private void Start()
     {
         int yWidth = MatrixManager.Instance.GetYWidth();

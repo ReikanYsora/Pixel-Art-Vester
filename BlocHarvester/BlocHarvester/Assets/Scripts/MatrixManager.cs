@@ -37,13 +37,21 @@ public class MatrixManager : MonoBehaviour
         for (int x = 0; x < XWidth; x++)
 		{
 			for (int y = 0; y < YWidth; y++)
-			{
-				GameObject tempBloc = GameObject.Instantiate(BlocPrefab, new Vector3(x, 0, y), Quaternion.identity);
-				tempBloc.transform.SetParent(BlocAnchor);
-                _blocs[x, y] = tempBloc;
+            {
+                CreateBloc(x, y);
             }
 		}
 	}
+    private void CreateBloc(int X, int Y)
+    {
+        GameObject tempBloc = GameObject.Instantiate(BlocPrefab, new Vector3(X, 0, Y), Quaternion.identity);
+        tempBloc.transform.SetParent(BlocAnchor);
+
+        if (_blocs != null)
+        {
+            _blocs[X, Y] = tempBloc;
+        }
+    }
 
     public Vector2 GetOrigin()
     {
@@ -63,6 +71,12 @@ public class MatrixManager : MonoBehaviour
     public GameObject GetBloc(int x, int y)
     {
         return _blocs[x, y];
+    }
+
+    public void HarvestBloc(int X, int Y)
+    {
+        Destroy(_blocs[X, Y]);
+        CreateBloc(X, Y);
     }
     #endregion
 }

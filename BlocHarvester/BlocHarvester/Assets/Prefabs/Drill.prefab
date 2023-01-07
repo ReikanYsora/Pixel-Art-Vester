@@ -213,9 +213,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87f736f41ed916a44acb19919977ff4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _blocLayer:
+    serializedVersion: 2
+    m_Bits: 128
   _collider: {fileID: 4215837987497459235}
   _screw: {fileID: 5322545914050539564}
   _screwRotateSpeed: -1500
+  _blocDetectionRange: 0.1
 --- !u!1 &8059760630273604651
 GameObject:
   m_ObjectHideFlags: 0

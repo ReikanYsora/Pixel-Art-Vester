@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool PauseMode = false;
     private float _currentTime;
     [SerializeField] private float _tickDelay;
+    [SerializeField] private Texture2D[] _pixelArts;
+
+    public Texture2D PixelArt { set; get; }
     #endregion
 
     #region UNITY METHODS
@@ -30,6 +33,14 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+    }
+
+    private void Start()
+    {
+        int index = UnityEngine.Random.Range(0, _pixelArts.Length);
+        PixelArt = _pixelArts[index];
+
+        UIManager.Instance.ChangeCurrentPixelArt(PixelArt);
     }
 
     private void Update()

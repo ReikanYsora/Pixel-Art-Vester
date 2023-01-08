@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MatrixManager : MonoBehaviour
@@ -10,6 +11,12 @@ public class MatrixManager : MonoBehaviour
 	[SerializeField] private Transform BlocAnchor;
     private GameObject[,] _blocs;
     #endregion
+
+    #region EVENTS
+    public delegate void BlocDestroyed(Vector3 position);
+    public event BlocDestroyed OnBlocDestroyed;
+    #endregion
+
 
     #region PROPERTIES
     public static MatrixManager Instance { get; private set; }
@@ -76,6 +83,32 @@ public class MatrixManager : MonoBehaviour
         return _blocs[x, y];
     }
 
+    public List<CMYColor> HarvestLine(int Y)
+    {
+        List<CMYColor> Harvest = new List<CMYColor>();
+
+        if (Y < YWidth)
+        {
+            for (int x = 0; x < XWidth; x++)
+            {
+                BlocBehavior tempBloc = _blocs[x, Y].GetComponent<BlocBehavior>();
+
+                if ((tempBloc != null) && (tempBloc.IsHarvestable))
+                {
+                    CMYColor tempColor = tempBloc.Color;
+                    Harvest.Add(tempColor);
+
+                    OnBlocDestroyed?.Invoke(_blocs[x, Y].transform.position);
+                    Destroy(_blocs[x, Y]);
+
+                    CreateBloc(x, Y);
+                }
+            }
+        }
+
+        return Harvest;
+    }
+
     public CMYColor HarvestBloc(int X, int Y)
     {
         if ((X < XWidth) && (Y < YWidth))
@@ -85,6 +118,9 @@ public class MatrixManager : MonoBehaviour
             if ((tempBloc != null) && (tempBloc.IsHarvestable))
             {
                 CMYColor tempColor = _blocs[X, Y].GetComponent<BlocBehavior>().Color;
+
+                OnBlocDestroyed?.Invoke(_blocs[X, Y].transform.position);
+
                 Destroy(_blocs[X, Y]);
                 CreateBloc(X, Y);
 
@@ -133,6 +169,7 @@ public class MatrixManager : MonoBehaviour
             {
                 if (_blocs[x,y] == gameObject)
                 {
+                    OnBlocDestroyed?.Invoke(gameObject.transform.position);
                     Destroy(gameObject);
                     CreateBloc(x, y);
                 }

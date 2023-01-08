@@ -43,6 +43,11 @@ public class UIManager : MonoBehaviour
     #region METHODS
     private void RefreshUI()
     {
+        if (SaveDataManager.Instance != null)
+        {
+            _completedText.text = SaveDataManager.Instance.CompletedPuzzles.Count.ToString();
+        }
+
         if (GameManager.Instance == null || !GameManager.Instance.GameInitialized)
         {
             _playButton.SetActive(false);
@@ -98,7 +103,7 @@ public class UIManager : MonoBehaviour
                 _timeText.text = GameManager.Instance.FormatedTime.ToString();
             }
 
-            _completedText.text = string.Format($"{GameManager.Instance.GetScore()} %");
+            _progressionText.text = string.Format($"{GameManager.Instance.CurrentScore} %");
         }
         else
         {

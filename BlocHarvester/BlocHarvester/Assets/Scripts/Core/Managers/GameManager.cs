@@ -18,10 +18,13 @@ public class GameManager : MonoBehaviour
 
     public Texture2D PixelArt { set; get; }
     public CMYColor[,] realColors;
+    public string CurrentPuzzle { private set; get; }
     public bool Pause { set; get; }
     public bool GameInitialized { set; get; }
 
+    public bool PuzzleCompleted { private set; get; }
     public string FormatedTime { private set; get; }
+    public float CurrentScore { private set; get; }
     #endregion
 
     #region UNITY METHODS
@@ -29,6 +32,7 @@ public class GameManager : MonoBehaviour
     {
         GameInitialized = false;
         Pause = false;
+        PuzzleCompleted = false;
 
         if (Instance != null && Instance != this)
         {
@@ -41,10 +45,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (SaveDataManager.Instance != null)
+        {
+            _playTime = SaveDataManager.Instance.ProgressTime;
+        }
+
         InitializeInventory();
 
-        int index = UnityEngine.Random.Range(0, _pixelArts.Length);
-        PixelArt = _pixelArts[index];
+        Texture2D[] _tempPixelArts = _pixelArts.Where(x => !SaveDataManager.Instance.CompletedPuzzles.Contains(x.name)).ToArray();
+
+        int index = UnityEngine.Random.Range(0, _tempPixelArts.Length);
+        PixelArt = _tempPixelArts[index];
+        CurrentPuzzle = PixelArt.name;
         realColors = new CMYColor[PixelArt.width, PixelArt.height];
 
         for (int x = 0; x < PixelArt.width; x++)
@@ -69,18 +81,24 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if ((!Pause) && (GameInitialized))
+        if ((!Pause) && GameInitialized && !PuzzleCompleted)
         {            
             _playTime += Time.deltaTime;
             TimeSpan tempSpan = TimeSpan.FromSeconds(_playTime);
             FormatedTime = tempSpan.Hours.ToString("00") + ":" + tempSpan.Minutes.ToString("00") + ":" + tempSpan.Seconds.ToString("00");
-        }
-    }
 
-    public int GetScore()
-    {
-        float tempResult = MatrixManager.Instance.GetScore(realColors) * 100f;
-        return Mathf.FloorToInt(tempResult);
+            CurrentScore = Mathf.FloorToInt(MatrixManager.Instance.GetScore(realColors) * 100f);
+
+            if (CurrentScore == 100f)
+            {
+                SaveDataManager.Instance.CompletedPuzzles.Add(CurrentPuzzle);
+                SaveDataManager.Instance.SaveTime(_playTime);
+                PuzzleCompleted = true;
+                GameInitialized = false;
+
+                ResetGame();
+            }
+        }
     }
 
     public void ResetGame()
@@ -109,6 +127,11 @@ public class GameManager : MonoBehaviour
     #region METHODS
     private void InitializeInventory()
     {
+        if (SaveDataManager.Instance.CompletedPuzzles == null)
+        {
+            SaveDataManager.Instance.CompletedPuzzles = new List<string>();
+        }
+
         if (SaveDataManager.Instance.Inventory == null)
         {
             SaveDataManager.Instance.Inventory = new List<PaintInventory>

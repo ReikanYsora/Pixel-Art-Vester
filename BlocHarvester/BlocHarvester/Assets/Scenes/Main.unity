@@ -2034,6 +2034,7 @@ GameObject:
   - component: {fileID: 1244010095}
   - component: {fileID: 1244010097}
   - component: {fileID: 1244010096}
+  - component: {fileID: 1244010098}
   m_Layer: 5
   m_Name: Time Text
   m_TagString: Untagged
@@ -2083,8 +2084,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 00:00:00
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 02e03242c070d70428c6aa41e4faf711, type: 2}
+  m_sharedMaterial: {fileID: 2700179371374379412, guid: 02e03242c070d70428c6aa41e4faf711,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2158,6 +2160,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1244010094}
   m_CullTransparentMesh: 1
+--- !u!114 &1244010098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244010094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: 1}
+  m_UseGraphicAlpha: 0
 --- !u!1 &1255239716
 GameObject:
   m_ObjectHideFlags: 0

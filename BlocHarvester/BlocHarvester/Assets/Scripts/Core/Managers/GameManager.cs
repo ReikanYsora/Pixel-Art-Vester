@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
             CurrentScore = Mathf.FloorToInt(MatrixManager.Instance.GetScore(realColors) * 100f);
 
             if (CurrentScore == 100f)
-            {
+            { 
                 SaveDataManager.Instance.CompletedPuzzles.Add(CurrentPuzzle);
                 SaveDataManager.Instance.SaveTime(_playTime);
                 PuzzleCompleted = true;

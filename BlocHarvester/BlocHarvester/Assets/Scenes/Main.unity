@@ -2825,6 +2825,21 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 0ee7d75deb008a943b318fe3e32ecdf6, type: 3}
   - {fileID: 2800000, guid: 2ba9be198a1c3514ab571fdbbdb38e29, type: 3}
   - {fileID: 2800000, guid: 3048ea9d663145e41919281e5cec8126, type: 3}
+  - {fileID: 2800000, guid: 1e86482a04231f54a86d8999b4949f94, type: 3}
+  - {fileID: 2800000, guid: 6ad3bc3f04ba2644d91d06391c5117b8, type: 3}
+  - {fileID: 2800000, guid: 493a6689e9cc15442bc8f3b4a100d222, type: 3}
+  - {fileID: 2800000, guid: d12b235d00fd89a4fa56af7a3af79a95, type: 3}
+  - {fileID: 2800000, guid: a41ea8ae7ebc3df49bcbf6212ac732d5, type: 3}
+  - {fileID: 2800000, guid: 6ce3c795d6c5364409b7c09dae63db4f, type: 3}
+  - {fileID: 2800000, guid: 5b97abecc4483714182f2a7356d60d79, type: 3}
+  - {fileID: 2800000, guid: 7d7d84fb2fd29084ba2ade07aca34243, type: 3}
+  - {fileID: 2800000, guid: f7ef75547d9aa784ea66b38a288d1ede, type: 3}
+  - {fileID: 2800000, guid: ea508ef322f9310459b9ce52f2c10496, type: 3}
+  - {fileID: 2800000, guid: 78331bee777b6e24b8762956ebc3454d, type: 3}
+  - {fileID: 2800000, guid: e58ff49e58563404fa86a791f68609c0, type: 3}
+  - {fileID: 2800000, guid: ec5d25f5e3b1647469dcfced4495fbef, type: 3}
+  - {fileID: 2800000, guid: f74c8fafe0c3671419290d4c6f59b7cf, type: 3}
+  - {fileID: 2800000, guid: 36fd71a713c246045932b0f7360c98fe, type: 3}
   _currentPaint: 0
   _inventoryBloc: {fileID: 5368757092128395344, guid: 8329e368b137fde4981d970d0d7fe4a6,
     type: 3}

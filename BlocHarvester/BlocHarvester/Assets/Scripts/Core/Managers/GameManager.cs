@@ -394,6 +394,11 @@ public class GameManager : MonoBehaviour
 
                 tempHarvest = new List<CMYColor>();
             }
+
+            if (i == harvest.Count - 1)
+            {
+                totalHarvestSplitted.Add(tempHarvest);
+            }
         }
 
         foreach (List<CMYColor> toCombine in totalHarvestSplitted)

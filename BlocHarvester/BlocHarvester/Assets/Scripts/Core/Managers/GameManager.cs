@@ -14,17 +14,47 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _inventoryBloc;
     [SerializeField] private GameObject _inventoryLegendBloc;
     [SerializeField] private Transform _inventoryBlocAnchor;
+    private bool _pause;
     private double _playTime;
 
     public Texture2D PixelArt { set; get; }
     public CMYColor[,] realColors;
     public string CurrentPuzzle { private set; get; }
-    public bool Pause { set; get; }
+    public bool Pause
+    {
+        set
+        {
+            if (value != _pause)
+            {
+                _pause = value;
+
+                if (_pause)
+                {
+                    OnPaused?.Invoke();
+                }
+                else
+                {
+                    OnResumed?.Invoke();
+                }
+            }
+        }
+        get
+        {
+            return _pause;
+        }
+    }
     public bool GameInitialized { set; get; }
 
     public bool PuzzleCompleted { private set; get; }
     public string FormatedTime { private set; get; }
     public float CurrentScore { private set; get; }
+    #endregion
+
+    #region EVENTS
+    public delegate void Paused();
+    public event Paused OnPaused;
+    public delegate void Resumed();
+    public event Resumed OnResumed;
     #endregion
 
     #region UNITY METHODS
@@ -94,7 +124,6 @@ public class GameManager : MonoBehaviour
                 SaveDataManager.Instance.CompletedPuzzles.Add(CurrentPuzzle);
                 SaveDataManager.Instance.SaveTime(_playTime);
                 PuzzleCompleted = true;
-                GameInitialized = false;
 
                 ResetGame();
             }
@@ -121,6 +150,14 @@ public class GameManager : MonoBehaviour
     {
         DrillManager.Instance.DrillForStart();
         GameInitialized = true;
+    }
+
+    public void BackToHome()
+    {
+        if (GameInitialized)
+        {
+            SceneManager.LoadScene("Title");
+        }
     }
     #endregion
 

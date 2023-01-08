@@ -19,7 +19,13 @@ public class SFXManager : MonoBehaviour
     #region CALLBACKS
     private void CBOnBlocDestroyed(Vector3 position)
     {
-        GameObject.Instantiate(ExplosionPrefab, position, Quaternion.identity);
+        GameObject tempObject = GameObject.Instantiate(ExplosionPrefab, position, Quaternion.identity);
+        AudioSource tempAudio = tempObject.GetComponent<AudioSource>();
+
+        if (tempAudio != null)
+        {
+            Destroy(tempObject, tempAudio.clip.length + 1f);
+        }
     }
 
     #endregion

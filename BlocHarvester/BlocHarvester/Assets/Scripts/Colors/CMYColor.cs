@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CMYColor
@@ -13,9 +14,9 @@ public class CMYColor
     {
         CMYColor tempColor =  ColorHelper.ConvertRGBToCMYColor(color);
 
-        c = tempColor.c;
-        m= tempColor.m;
-        y = tempColor.y;
+        c = (float) Math.Round(tempColor.c, 1);
+        m = (float) Math.Round(tempColor.m, 1);
+        y = (float) Math.Round(tempColor.y, 1);
     }
 
     public CMYColor()

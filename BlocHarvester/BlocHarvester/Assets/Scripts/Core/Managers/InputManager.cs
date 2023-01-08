@@ -70,7 +70,7 @@ public class InputManager : MonoBehaviour
                 {
                     BlocBehavior blocBehavior = hit.collider.gameObject.GetComponent<BlocBehavior>();
 
-                    if ((blocBehavior != null) && (blocBehavior.Color.ToString() != GameManager.Instance.GetCurrentPaint().ToString()))
+                    if ((blocBehavior != null) && (blocBehavior.Color.ToString() != GameManager.Instance.GetCurrentPaintColor().ToString()))
                     {
                         CMYColor tempColor = GameManager.Instance.Paint();
 
@@ -89,6 +89,17 @@ public class InputManager : MonoBehaviour
                     {
                         GameManager.Instance.SetCurrentPaint(blocBehavior.Color);
                     }
+                }
+            }
+
+            if (Input.GetMouseButton(1))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 200, _bloc))
+                {
+                    MatrixManager.Instance.DestroyBloc(hit.collider.gameObject);
                 }
             }
         }

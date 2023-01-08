@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,15 +11,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Texture2D[] _pixelArts;
     public int _currentPaint;
     private GameObject[] _blocInventory;
-    private ObservableCollection<PaintInventory> _inventory;
     [SerializeField] private GameObject _inventoryBloc;
     [SerializeField] private GameObject _inventoryLegendBloc;
     [SerializeField] private Transform _inventoryBlocAnchor;
+    private double _playTime;
 
     public Texture2D PixelArt { set; get; }
     public CMYColor[,] realColors;
     public bool Pause { set; get; }
     public bool GameInitialized { set; get; }
+
+    public string FormatedTime { private set; get; }
     #endregion
 
     #region UNITY METHODS
@@ -65,6 +67,38 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.ChangeCurrentPixelArt(PixelArt);
     }
 
+    private void Update()
+    {
+        if ((!Pause) && (GameInitialized))
+        {            
+            _playTime += Time.deltaTime;
+            TimeSpan tempSpan = TimeSpan.FromSeconds(_playTime);
+            FormatedTime = tempSpan.Hours.ToString("00") + ":" + tempSpan.Minutes.ToString("00") + ":" + tempSpan.Seconds.ToString("00");
+        }
+    }
+
+    public int GetScore()
+    {
+        float tempResult = MatrixManager.Instance.GetScore(realColors) * 100f;
+        return Mathf.FloorToInt(tempResult);
+    }
+
+    public void ResetGame()
+    {
+        if (GameInitialized)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    public void PauseOrResume()
+    {
+        if (GameInitialized)
+        {
+            Pause = !Pause;
+        }
+    }
+
     public void StartGame()
     {
         DrillManager.Instance.DrillForStart();
@@ -75,202 +109,205 @@ public class GameManager : MonoBehaviour
     #region METHODS
     private void InitializeInventory()
     {
-        _inventory = new ObservableCollection<PaintInventory>
+        if (SaveDataManager.Instance.Inventory == null)
         {
-            //White
-            new PaintInventory
+            SaveDataManager.Instance.Inventory = new List<PaintInventory>
             {
-                Index = 0,
-                Color = ColorHelper.White,
-                Quantity = 0,
-                Infinite = true,
-                ToCreate = new List<CMYColor>()
-            },
-            //Cyan
-            new PaintInventory
-            {
-                Index = 1,
-                Color = ColorHelper.Cyan,
-                Quantity = 0,
-                Infinite = true,
-                ToCreate = new List<CMYColor>()
-            },
-            //Light blue
-            new PaintInventory
-            {
-                Index = 2,
-                Color = ColorHelper.LightBlue,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                //White
+                new PaintInventory
                 {
-                    ColorHelper.Cyan, ColorHelper.Blue
-                }
-            },
-            //Blue
-            new PaintInventory
-            {
-                Index = 3,
-                Color = ColorHelper.Blue,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 0,
+                    Color = ColorHelper.White,
+                    Quantity = 0,
+                    Infinite = true,
+                    ToCreate = new List<CMYColor>()
+                },
+                //Cyan
+                new PaintInventory
                 {
-                    ColorHelper.Cyan, ColorHelper.Magenta
-                }
-            },
-            //Dark purple
-            new PaintInventory
-            {
-                Index = 4,
-                Color = ColorHelper.DarkPurple,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 1,
+                    Color = ColorHelper.Cyan,
+                    Quantity = 0,
+                    Infinite = true,
+                    ToCreate = new List<CMYColor>()
+                },
+                //Light blue
+                new PaintInventory
                 {
-                    ColorHelper.Blue, ColorHelper.Magenta
-                }
-            },
-            //Magenta
-            new PaintInventory
-            {
-                Index = 5,
-                Color = ColorHelper.Magenta,
-                Quantity = 0,
-                Infinite = true,
-                ToCreate = new List<CMYColor>()
-            },
-            //Dark magenta
-            new PaintInventory
-            {
-                Index = 6,
-                Color = ColorHelper.DarkMagenta,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 2,
+                    Color = ColorHelper.LightBlue,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Cyan, ColorHelper.Blue
+                    }
+                },
+                //Blue
+                new PaintInventory
                 {
-                    ColorHelper.Magenta, ColorHelper.Red
-                }
-            },
-            //Red
-            new PaintInventory
-            {
-                Index = 7,
-                Color = ColorHelper.Red,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 3,
+                    Color = ColorHelper.Blue,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Cyan, ColorHelper.Magenta
+                    }
+                },
+                //Dark purple
+                new PaintInventory
                 {
-                    ColorHelper.Magenta, ColorHelper.Yellow
-                }
-            },
-            //orange
-            new PaintInventory
-            {
-                Index = 8,
-                Color = ColorHelper.Orange,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 4,
+                    Color = ColorHelper.DarkPurple,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Blue, ColorHelper.Magenta
+                    }
+                },
+                //Magenta
+                new PaintInventory
                 {
-                    ColorHelper.Red, ColorHelper.Yellow
-                }
-            },
-            //Yellow
-            new PaintInventory
-            {
-                Index = 9,
-                Color = ColorHelper.Yellow,
-                Quantity = 0,
-                Infinite = true,
-                ToCreate = new List<CMYColor>()
-            },
-            //Light green
-            new PaintInventory
-            {
-                Index = 10,
-                Color = ColorHelper.LightGreen,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 5,
+                    Color = ColorHelper.Magenta,
+                    Quantity = 0,
+                    Infinite = true,
+                    ToCreate = new List<CMYColor>()
+                },
+                //Dark magenta
+                new PaintInventory
                 {
-                    ColorHelper.Yellow, ColorHelper.Green
-                }
-            },
-            //Green
-            new PaintInventory
-            {
-                Index = 11,
-                Color = ColorHelper.Green,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 6,
+                    Color = ColorHelper.DarkMagenta,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Magenta, ColorHelper.Red
+                    }
+                },
+                //Red
+                new PaintInventory
                 {
-                    ColorHelper.Yellow, ColorHelper.Cyan
-                }
-            },
-            //Middle green
-            new PaintInventory
-            {
-                Index = 12,
-                Color = ColorHelper.MiddleGreen,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 7,
+                    Color = ColorHelper.Red,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Magenta, ColorHelper.Yellow
+                    }
+                },
+                //orange
+                new PaintInventory
                 {
-                    ColorHelper.Green, ColorHelper.Cyan
-                }
-            },
-            //Black
-            new PaintInventory
-            {
-                Index = 13,
-                Color = ColorHelper.Black,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 8,
+                    Color = ColorHelper.Orange,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Red, ColorHelper.Yellow
+                    }
+                },
+                //Yellow
+                new PaintInventory
                 {
-                    ColorHelper.Cyan, ColorHelper.Magenta, ColorHelper.Yellow
-                }
-            },
-            //Gray
-            new PaintInventory
-            {
-                Index = 14,
-                Color = ColorHelper.Gray,
-                Quantity = 0,
-                Infinite = false,
-                ToCreate = new List<CMYColor>
+                    Index = 9,
+                    Color = ColorHelper.Yellow,
+                    Quantity = 0,
+                    Infinite = true,
+                    ToCreate = new List<CMYColor>()
+                },
+                //Light green
+                new PaintInventory
                 {
-                    ColorHelper.White, ColorHelper.Black
+                    Index = 10,
+                    Color = ColorHelper.LightGreen,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Yellow, ColorHelper.Green
+                    }
+                },
+                //Green
+                new PaintInventory
+                {
+                    Index = 11,
+                    Color = ColorHelper.Green,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Yellow, ColorHelper.Cyan
+                    }
+                },
+                //Middle green
+                new PaintInventory
+                {
+                    Index = 12,
+                    Color = ColorHelper.MiddleGreen,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Green, ColorHelper.Cyan
+                    }
+                },
+                //Black
+                new PaintInventory
+                {
+                    Index = 13,
+                    Color = ColorHelper.Black,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.Cyan, ColorHelper.Magenta, ColorHelper.Yellow
+                    }
+                },
+                //Gray
+                new PaintInventory
+                {
+                    Index = 14,
+                    Color = ColorHelper.Gray,
+                    Quantity = 0,
+                    Infinite = false,
+                    ToCreate = new List<CMYColor>
+                    {
+                        ColorHelper.White, ColorHelper.Black
+                    }
                 }
-            }
-        };
+            };
+        }
 
         _blocInventory = new GameObject[15];
 
-        for (int i = 0; i < _inventory.Count; i++)
+        for (int i = 0; i < SaveDataManager.Instance.Inventory.Count; i++)
         {
             GameObject tempBloc = GameObject.Instantiate(_inventoryBloc, new Vector3(-3.5f, 0, i), Quaternion.identity);
-            tempBloc.GetComponent<BlocBehavior>().Color = _inventory[i].Color;
+            tempBloc.GetComponent<BlocBehavior>().Color = SaveDataManager.Instance.Inventory[i].Color;
 
-            if (_inventory[i].Infinite)
+            if (SaveDataManager.Instance.Inventory[i].Infinite)
             {
                 tempBloc.GetComponent<BlocBehavior>().SetQuantity(-1);
             }
             else
             {
-                tempBloc.GetComponent<BlocBehavior>().SetQuantity(_inventory[i].Quantity);
+                tempBloc.GetComponent<BlocBehavior>().SetQuantity(SaveDataManager.Instance.Inventory[i].Quantity);
             }
 
             tempBloc.transform.parent = _inventoryBlocAnchor;
 
             _blocInventory[i] = tempBloc;
 
-            for (int j = 0; j < _inventory[i].ToCreate.Count; j++)
+            for (int j = 0; j < SaveDataManager.Instance.Inventory[i].ToCreate.Count; j++)
             {
                 GameObject tempLegend = GameObject.Instantiate(_inventoryLegendBloc, new Vector3(-5f -j, 0, i), Quaternion.identity);
-                tempLegend.GetComponent<BlocBehavior>().Color = _inventory[i].ToCreate[j];
+                tempLegend.GetComponent<BlocBehavior>().Color = SaveDataManager.Instance.Inventory[i].ToCreate[j];
                 tempLegend.transform.parent = _inventoryBlocAnchor;
             }
         }
@@ -280,7 +317,7 @@ public class GameManager : MonoBehaviour
 
     private void AddToInventory(CMYColor color)
     {
-        PaintInventory tempInventory = _inventory.Where(x => x.Color.c == color.c && x.Color.m == color.m && x.Color.y == color.y).FirstOrDefault();
+        PaintInventory tempInventory = SaveDataManager.Instance.Inventory.Where(x => x.Color.c == color.c && x.Color.m == color.m && x.Color.y == color.y).FirstOrDefault();
 
         if (tempInventory != null)
         {
@@ -291,9 +328,9 @@ public class GameManager : MonoBehaviour
 
     public void SetCurrentPaint(CMYColor color)
     {
-        for (int i = 0; i < _inventory.Count; i++)
+        for (int i = 0; i < SaveDataManager.Instance.Inventory.Count; i++)
         {
-            if (_inventory[i].Color.ToString() == color.ToString())
+            if (SaveDataManager.Instance.Inventory[i].Color.ToString() == color.ToString())
             {
                 _currentPaint = i;
                 break;
@@ -301,9 +338,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public CMYColor GetCurrentPaint()
+    public PaintInventory GetCurrentPaint()
     {
-        return _inventory[_currentPaint].Color;
+        return SaveDataManager.Instance.Inventory[_currentPaint];
+    }
+
+    public CMYColor GetCurrentPaintColor()
+    {
+        return SaveDataManager.Instance.Inventory[_currentPaint].Color;
     }
 
     public void ProcessHarvest(List<CMYColor> harvest)
@@ -316,7 +358,7 @@ public class GameManager : MonoBehaviour
         {
             CMYColor tempColor = harvest[i];
 
-            if (!ColorHelper.IsWhite(tempColor))
+            if (!ColorHelper.IsSeparation(tempColor))
             {
                 tempHarvest.Add(tempColor);
             }
@@ -356,6 +398,14 @@ public class GameManager : MonoBehaviour
             }
             else if (toCombineStr.Count == 2)
             {
+                //Get a gray bloc
+                if (toCombineStr.Contains(ColorHelper.Black.ToString()) && toCombineStr.Contains(ColorHelper.White.ToString()))
+                {
+                    finalHarvest.Add(ColorHelper.Gray);
+
+                    continue;
+                }
+
                 //Get a blue bloc
                 if (toCombineStr.Contains(ColorHelper.Cyan.ToString()) && toCombineStr.Contains(ColorHelper.Magenta.ToString()))
                 {
@@ -442,17 +492,17 @@ public class GameManager : MonoBehaviour
 
     public CMYColor Paint()
     {
-        CMYColor tempColor = _inventory[_currentPaint].Color;
+        CMYColor tempColor = SaveDataManager.Instance.Inventory[_currentPaint].Color;
 
-        if (_inventory[_currentPaint].Infinite)
+        if (SaveDataManager.Instance.Inventory[_currentPaint].Infinite)
         {
             return tempColor;
 
         }
-        else if (_inventory[_currentPaint].Quantity > 0)
+        else if (SaveDataManager.Instance.Inventory[_currentPaint].Quantity > 0)
         {
-            _inventory[_currentPaint].Quantity -= 1;
-            _blocInventory[_currentPaint].GetComponent<BlocBehavior>().SetQuantity(_inventory[_currentPaint].Quantity);
+            SaveDataManager.Instance.Inventory[_currentPaint].Quantity -= 1;
+            _blocInventory[_currentPaint].GetComponent<BlocBehavior>().SetQuantity(SaveDataManager.Instance.Inventory[_currentPaint].Quantity);
 
             return tempColor;
         }

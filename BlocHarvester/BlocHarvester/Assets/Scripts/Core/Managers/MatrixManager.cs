@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MatrixManager : MonoBehaviour
@@ -97,6 +98,45 @@ public class MatrixManager : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public float GetScore(CMYColor[,] pixelArtToCompare)
+    {
+        float totalBlocs = XWidth * YWidth;
+        float correctBlocs = 0f;
+
+        for (int x = 0; x < XWidth; x++)
+        {
+            for (int y = 0; y < YWidth; y++)
+            {
+                if (ColorHelper.CompareColor(pixelArtToCompare[x, y], _blocs[x, y].GetComponent<BlocBehavior>().Color))
+                {
+                    correctBlocs++;
+                }
+            }
+        }
+
+        return correctBlocs / totalBlocs;
+    }
+
+    public void DestroyBloc(GameObject gameObject)
+    {
+        if (gameObject == null) 
+        {
+            return;
+        }
+
+        for (int x = 0; x < XWidth; x++)
+        {
+            for (int y = 0; y < YWidth; y++)
+            {
+                if (_blocs[x,y] == gameObject)
+                {
+                    Destroy(gameObject);
+                    CreateBloc(x, y);
+                }
+            }
         }
     }
     #endregion

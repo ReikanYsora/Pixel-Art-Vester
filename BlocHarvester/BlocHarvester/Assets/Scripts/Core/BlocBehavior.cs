@@ -31,13 +31,7 @@ public class BlocBehavior : MonoBehaviour
     private void Awake()
     {
         _material = GetComponent<MeshRenderer>().material;
-
-        Color = new CMYColor
-        {
-            c = 0,
-            m = 0,
-            y = 0
-        };
+        Color = ColorHelper.Ignore;
     }
 
     private void Update()

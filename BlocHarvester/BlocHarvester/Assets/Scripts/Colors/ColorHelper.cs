@@ -1,3 +1,4 @@
+using System.Drawing;
 using UnityEngine;
 
 public static class ColorHelper
@@ -11,6 +12,19 @@ public static class ColorHelper
                 c = 0,
                 m = 1,
                 y = 0
+            };
+        }
+    }
+
+    public static CMYColor Ignore
+    {
+        get
+        {
+            return new CMYColor
+            {
+                c = 0.2f,
+                m = 0.3f,
+                y = 0.4f
             };
         }
     }
@@ -196,7 +210,7 @@ public static class ColorHelper
         }
     }
 
-    public static CMYColor ConvertRGBToCMYColor(Color color)
+    public static CMYColor ConvertRGBToCMYColor(UnityEngine.Color color)
     {
         return new CMYColor
         {
@@ -206,9 +220,9 @@ public static class ColorHelper
         };
     }
 
-    public static Color ConvertCMYColorToRGBColor(CMYColor color)
+    public static UnityEngine.Color ConvertCMYColorToRGBColor(CMYColor color)
     {
-        return new Color
+        return new UnityEngine.Color
         {
             r = 1 - color.c,
             g = 1 - color.m,
@@ -217,8 +231,13 @@ public static class ColorHelper
         };
     }
 
-    public static bool IsWhite(CMYColor color)
+    public static bool IsSeparation(CMYColor color)
     {
-        return color.c == 0 && color.m == 0 && color.y == 0;
+        return color.c == Ignore.c && color.m == Ignore.m && color.y == Ignore.y;
+    }
+
+    public static bool CompareColor(CMYColor color1, CMYColor color2)
+    {
+        return color1.c == color2.c && color1.m == color2.m && color1.y == color2.y;
     }
 }

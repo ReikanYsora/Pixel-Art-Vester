@@ -311,7 +311,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < SaveDataManager.Instance.Inventory.Count; i++)
         {
-            GameObject tempBloc = GameObject.Instantiate(_inventoryBloc, new Vector3(-3.5f, 0, i), Quaternion.identity);
+            GameObject tempBloc = GameObject.Instantiate(_inventoryBloc, new Vector3(-4.5f, 0, i), Quaternion.identity);
             tempBloc.GetComponent<BlocBehavior>().Color = SaveDataManager.Instance.Inventory[i].Color;
 
             if (SaveDataManager.Instance.Inventory[i].Infinite)
@@ -329,7 +329,7 @@ public class GameManager : MonoBehaviour
 
             for (int j = 0; j < SaveDataManager.Instance.Inventory[i].ToCreate.Count; j++)
             {
-                GameObject tempLegend = GameObject.Instantiate(_inventoryLegendBloc, new Vector3(-5f -j, 0, i), Quaternion.identity);
+                GameObject tempLegend = GameObject.Instantiate(_inventoryLegendBloc, new Vector3(-6f -j, 0, i), Quaternion.identity);
                 tempLegend.GetComponent<BlocBehavior>().Color = SaveDataManager.Instance.Inventory[i].ToCreate[j];
                 tempLegend.transform.parent = _inventoryBlocAnchor;
             }

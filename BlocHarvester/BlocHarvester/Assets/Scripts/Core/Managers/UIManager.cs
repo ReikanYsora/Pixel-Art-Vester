@@ -52,16 +52,16 @@ public class UIManager : MonoBehaviour
         {
             default:
             case InputManager.HoveredType.Nothing:
-                Cursor.SetCursor(_normalIconPaint, Vector2.zero, CursorMode.Auto);
+                Cursor.SetCursor(_normalIconPaint, Vector2.zero, CursorMode.ForceSoftware);
                 break;
             case InputManager.HoveredType.Bloc:
-                Cursor.SetCursor(_paintIconPaint, new Vector2(0f, 32f), CursorMode.Auto);
+                Cursor.SetCursor(_paintIconPaint, new Vector2(0f, 32f), CursorMode.ForceSoftware);
                 break;
             case InputManager.HoveredType.Inventory:
-                Cursor.SetCursor(_inventoryIconPaint, new Vector2(0f, 32f), CursorMode.Auto);
+                Cursor.SetCursor(_inventoryIconPaint, new Vector2(0f, 32f), CursorMode.ForceSoftware);
                 break;
             case InputManager.HoveredType.Bomb:
-                Cursor.SetCursor(_bombIconPaint, Vector2.zero, CursorMode.Auto);
+                Cursor.SetCursor(_bombIconPaint, Vector2.zero, CursorMode.ForceSoftware);
                 break;
         }
     }

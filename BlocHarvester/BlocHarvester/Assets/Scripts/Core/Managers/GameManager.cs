@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     private GameObject[] _blocInventory;
     [SerializeField] private GameObject _inventoryBloc;
     [SerializeField] private GameObject _inventoryLegendBloc;
+    [SerializeField] private GameObject _inventoryPlus;
+    [SerializeField] private GameObject _inventoryEquals;
     [SerializeField] private Transform _inventoryBlocAnchor;
     private bool _pause;
     private double _playTime;
@@ -362,13 +364,24 @@ public class GameManager : MonoBehaviour
 
             tempBloc.transform.parent = _inventoryBlocAnchor;
 
+            if (SaveDataManager.Instance.Inventory[i].ToCreate.Count != 0)
+            {
+                GameObject tempEquals = GameObject.Instantiate(_inventoryEquals, new Vector3(-5.5f, 0, i), Quaternion.identity);
+            }
+
             _blocInventory[i] = tempBloc;
+
 
             for (int j = 0; j < SaveDataManager.Instance.Inventory[i].ToCreate.Count; j++)
             {
-                GameObject tempLegend = GameObject.Instantiate(_inventoryLegendBloc, new Vector3(-6f -j, 0, i), Quaternion.identity);
+                GameObject tempLegend = GameObject.Instantiate(_inventoryLegendBloc, new Vector3(-6.5f - (j * 2), 0, i), Quaternion.identity);
                 tempLegend.GetComponent<BlocBehavior>().Color = SaveDataManager.Instance.Inventory[i].ToCreate[j];
                 tempLegend.transform.parent = _inventoryBlocAnchor;
+
+                if (j < SaveDataManager.Instance.Inventory[i].ToCreate.Count - 1)
+                {
+                    GameObject.Instantiate(_inventoryPlus, new Vector3(-7.5f - (j * 2), 0, i), Quaternion.identity);
+                }
             }
         }
 

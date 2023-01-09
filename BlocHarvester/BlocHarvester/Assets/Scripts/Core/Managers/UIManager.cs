@@ -16,6 +16,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _playButton;
     [SerializeField] private GameObject _pauseButton;
     [SerializeField] private GameObject _reloadButton;
+    [SerializeField] private Texture2D _normalIconPaint;
+    [SerializeField] private Texture2D _paintIconPaint;
+    [SerializeField] private Texture2D _bombIconPaint;
+    [SerializeField] private Texture2D _inventoryIconPaint;
     #endregion
 
     #region PROPERTIES
@@ -36,11 +40,32 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        ChangeMouseIcon();
         RefreshUI();
     }
     #endregion
 
     #region METHODS
+    private void ChangeMouseIcon()
+    {
+        switch (InputManager.Instance.HoverBloc)
+        {
+            default:
+            case InputManager.HoveredType.Nothing:
+                Cursor.SetCursor(_normalIconPaint, Vector2.zero, CursorMode.Auto);
+                break;
+            case InputManager.HoveredType.Bloc:
+                Cursor.SetCursor(_paintIconPaint, new Vector2(0f, 32f), CursorMode.Auto);
+                break;
+            case InputManager.HoveredType.Inventory:
+                Cursor.SetCursor(_inventoryIconPaint, new Vector2(0f, 32f), CursorMode.Auto);
+                break;
+            case InputManager.HoveredType.Bomb:
+                Cursor.SetCursor(_bombIconPaint, Vector2.zero, CursorMode.Auto);
+                break;
+        }
+    }
+
     private void RefreshUI()
     {
         if (SaveDataManager.Instance != null)

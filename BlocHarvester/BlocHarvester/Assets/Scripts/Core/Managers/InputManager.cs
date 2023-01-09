@@ -1,17 +1,25 @@
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    #region ENUMS
+    public enum HoveredType { Nothing, Bloc, Inventory, Bomb }
+    #endregion
+
+
     #region ATTRIBUTES
-    [SerializeField] private LayerMask _drillButton;
+    [SerializeField] private LayerMask _bomb;
     [SerializeField] private LayerMask _bloc;
     [SerializeField] private LayerMask _inventoryBloc;
-    private List<GameObject> _drillsSelection;
+    private GameObject _hoveredGameobject;
     #endregion
 
     #region PROPERTIES
     public static InputManager Instance { get; private set; }
+
+    public HoveredType HoverBloc { get; private set; }
     #endregion
 
     #region UNITY METHODS
@@ -24,8 +32,6 @@ public class InputManager : MonoBehaviour
         }
 
         Instance = this;
-
-        _drillsSelection = new List<GameObject>();
     }
 
     private void Update()
@@ -34,36 +40,32 @@ public class InputManager : MonoBehaviour
         {
             GameManager.Instance.StartGame();
         }
-        
+
         if (!GameManager.Instance.Pause && GameManager.Instance.GameInitialized)
         {
-            if (Input.GetMouseButton(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit, 200, _drillButton))
-                {
-                    if (!_drillsSelection.Contains(hit.transform.gameObject))
-                    {
-                        _drillsSelection.Add(hit.transform.gameObject);
-                    }
-                }
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                foreach (GameObject tempDrill in _drillsSelection)
-                {
-                    DrillBehavior behavior = tempDrill.GetComponentInParent<DrillBehavior>();
-                    behavior.StartHarvest(true);
-                }
 
-                _drillsSelection.Clear();
+            if (Physics.Raycast(ray, 200, _bloc))
+            {
+                HoverBloc = HoveredType.Bloc;
             }
+            else if (Physics.Raycast(ray, 200, _inventoryBloc))
+            {
+                HoverBloc = HoveredType.Inventory;
+            }
+            else if (Physics.Raycast(ray, 200, _bomb))
+            {
+                HoverBloc = HoveredType.Bomb;
+            }
+            else
+            {
+                HoverBloc = HoveredType.Nothing;
+            }
+
 
             if (Input.GetMouseButton(0))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
                 if (Physics.Raycast(ray, out hit, 200, _bloc))
@@ -80,8 +82,7 @@ public class InputManager : MonoBehaviour
                         }
                     }
                 }
-
-                if (Physics.Raycast(ray, out hit, 200, _inventoryBloc))
+                else if (Physics.Raycast(ray, out hit, 200, _inventoryBloc))
                 {
                     BlocBehavior blocBehavior = hit.collider.gameObject.GetComponent<BlocBehavior>();
 
@@ -92,9 +93,19 @@ public class InputManager : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButtonDown(0))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 200, _bomb))
+                {
+                    DrillBehavior behavior = hit.transform.gameObject.GetComponentInParent<DrillBehavior>();
+                    behavior.StartHarvest(true);
+                }
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
                 RaycastHit hit;
 
                 if (Physics.Raycast(ray, out hit, 200, _bloc))

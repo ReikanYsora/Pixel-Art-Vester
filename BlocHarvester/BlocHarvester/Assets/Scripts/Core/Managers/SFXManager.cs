@@ -1,13 +1,16 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SFXManager : MonoBehaviour
 {
     #region ATTRIBUTES
     [SerializeField] private GameObject ExplosionPrefab;
-    [SerializeField] private AudioClip _clicSFX;
+    [SerializeField] private GameObject InventoryAddPrefab;
     [SerializeField] private AudioClip _pauseSFX;
     [SerializeField] private AudioClip _resumeSFX;
-    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _selectionSFX;
+    [SerializeField] private AudioClip _errorSFX;
+    private AudioSource _audioSource;
     #endregion
 
     #region PROPERTIES
@@ -47,9 +50,20 @@ public class SFXManager : MonoBehaviour
     #endregion
 
     #region METHODS
-    private void PlayUISound()
+    public void PlaySelectionSound()
     {
-        _audioSource.PlayOneShot(_clicSFX);
+        _audioSource.PlayOneShot(_selectionSFX);
+    }
+
+    public void PlayErrorSound()
+    {
+        _audioSource.PlayOneShot(_errorSFX);
+    }
+
+    public void PlayInventoryAddEffect(Vector3 position)
+    {
+        GameObject tempObject = GameObject.Instantiate(InventoryAddPrefab, position, Quaternion.identity);
+        Destroy(tempObject, 2.0f);
     }
     #endregion
 

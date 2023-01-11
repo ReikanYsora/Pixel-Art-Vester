@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     #region ENUMS
-    public enum HoveredType { Nothing, Bloc, Inventory, Bomb }
+    public enum HoveredType { Nothing, Bloc, Inventory, InventoryMissing, Bomb }
     #endregion
 
 
@@ -44,15 +44,33 @@ public class InputManager : MonoBehaviour
         if (!GameManager.Instance.Pause && GameManager.Instance.GameInitialized)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit tempHit;
 
 
             if (Physics.Raycast(ray, 200, _bloc))
             {
                 HoverBloc = HoveredType.Bloc;
             }
-            else if (Physics.Raycast(ray, 200, _inventoryBloc))
+            else if (Physics.Raycast(ray, out tempHit, 200, _inventoryBloc))
             {
-                HoverBloc = HoveredType.Inventory;
+                BlocBehavior blocBehavior = tempHit.collider.gameObject.GetComponent<BlocBehavior>();
+
+                if (blocBehavior != null)
+                {
+                    if (GameManager.Instance.ColorAvailableInInventory(blocBehavior.Color))
+                    {
+                        HoverBloc = HoveredType.Inventory;
+                    }
+                    else
+                    {
+                        HoverBloc = HoveredType.InventoryMissing;
+                    }
+                }
+                else
+                {
+                    HoverBloc = HoveredType.Inventory;
+                }
+
             }
             else if (Physics.Raycast(ray, 200, _bomb))
             {
@@ -82,15 +100,6 @@ public class InputManager : MonoBehaviour
                         }
                     }
                 }
-                else if (Physics.Raycast(ray, out hit, 200, _inventoryBloc))
-                {
-                    BlocBehavior blocBehavior = hit.collider.gameObject.GetComponent<BlocBehavior>();
-
-                    if (blocBehavior != null)
-                    {
-                        GameManager.Instance.SetCurrentPaint(blocBehavior.Color);
-                    }
-                }
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -101,6 +110,15 @@ public class InputManager : MonoBehaviour
                 {
                     DrillBehavior behavior = hit.transform.gameObject.GetComponentInParent<DrillBehavior>();
                     behavior.StartHarvest(true);
+                }
+                else if (Physics.Raycast(ray, out hit, 200, _inventoryBloc))
+                {
+                    BlocBehavior blocBehavior = hit.collider.gameObject.GetComponent<BlocBehavior>();
+
+                    if (blocBehavior != null)
+                    {
+                        GameManager.Instance.SetCurrentPaint(blocBehavior.Color);
+                    }
                 }
             }
 

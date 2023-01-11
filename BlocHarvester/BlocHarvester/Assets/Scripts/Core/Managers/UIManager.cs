@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Texture2D _paintIconPaint;
     [SerializeField] private Texture2D _bombIconPaint;
     [SerializeField] private Texture2D _inventoryIconPaint;
+    [SerializeField] private Texture2D _crossIconPaint;
     #endregion
 
     #region PROPERTIES
@@ -56,6 +57,9 @@ public class UIManager : MonoBehaviour
                 break;
             case InputManager.HoveredType.Bloc:
                 Cursor.SetCursor(_paintIconPaint, new Vector2(0f, 32f), CursorMode.ForceSoftware);
+                break;
+            case InputManager.HoveredType.InventoryMissing:
+                Cursor.SetCursor(_crossIconPaint, new Vector2(0f, 32f), CursorMode.ForceSoftware);
                 break;
             case InputManager.HoveredType.Inventory:
                 Cursor.SetCursor(_inventoryIconPaint, new Vector2(0f, 32f), CursorMode.ForceSoftware);

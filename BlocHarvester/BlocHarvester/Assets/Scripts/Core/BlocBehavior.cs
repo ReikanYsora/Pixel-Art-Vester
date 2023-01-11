@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class BlocBehavior : MonoBehaviour
     private CMYColor _color;
     public bool IsHarvestable;
     public TMP_Text _quantityText;
+    private Animator _animator;
     #endregion
 
     #region PROPERTIES
@@ -31,6 +33,7 @@ public class BlocBehavior : MonoBehaviour
     private void Awake()
     {
         _material = GetComponent<MeshRenderer>().material;
+        _animator = GetComponent<Animator>();
         Color = ColorHelper.Ignore;
     }
 
@@ -59,6 +62,14 @@ public class BlocBehavior : MonoBehaviour
                 _quantityText.text = quantity.ToString();
             }
         }
+    }
+
+    public void StartFX()
+    {
+        Vector3 position = transform.position;
+        position.y += 1;
+        SFXManager.Instance.PlayInventoryAddEffect(position);
+        _animator.SetTrigger("Shake");
     }
     #endregion
 }

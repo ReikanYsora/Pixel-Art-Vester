@@ -732,7 +732,7 @@ GameObject:
   - component: {fileID: 437969597}
   - component: {fileID: 437969598}
   m_Layer: 0
-  m_Name: DrillManager
+  m_Name: BombManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -765,8 +765,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8dace0ea0f83a04389c3d713171072d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _drillsAnchor: {fileID: 1139540476}
-  _drillPrefab: {fileID: 1396494697234978795, guid: 06a1af5df2ce9984889604969e1579a8,
+  _bombAnchor: {fileID: 1139540476}
+  _bombPrefab: {fileID: 1396494697234978795, guid: 06a1af5df2ce9984889604969e1579a8,
     type: 3}
   _offset: 1
 --- !u!1 &443098538
@@ -2130,7 +2130,6 @@ Transform:
   - {fileID: 2002178921}
   - {fileID: 1729402254}
   - {fileID: 437969597}
-  - {fileID: 1702982826}
   - {fileID: 1381510600}
   - {fileID: 1255239717}
   m_Father: {fileID: 0}
@@ -2360,7 +2359,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1139540476}
   m_Layer: 0
-  m_Name: Drills
+  m_Name: Bombs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2728,7 +2727,7 @@ Transform:
   m_Children:
   - {fileID: 976989886}
   m_Father: {fileID: 986627143}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1255239718
 MonoBehaviour:
@@ -2743,10 +2742,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ExplosionPrefab: {fileID: 184092, guid: 98220d2bea7610743abe68b15035e282, type: 3}
-  _clicSFX: {fileID: 0}
+  InventoryAddPrefab: {fileID: 126546, guid: fb50060f5b2d647429cf0e0dd2df8dd7, type: 3}
   _pauseSFX: {fileID: 8300000, guid: f1170d6ffa603b348a0185ec5152b7f3, type: 3}
   _resumeSFX: {fileID: 8300000, guid: becdb771780cc2e4785cfc7cfeafbc28, type: 3}
-  _audioSource: {fileID: 0}
+  _selectionSFX: {fileID: 8300000, guid: e7e3a56620747e24eb3ccf22306bb0be, type: 3}
+  _errorSFX: {fileID: 8300000, guid: 1b93f4e5cf0fd8f49ae504fcd7f3b4f8, type: 3}
 --- !u!82 &1255239719
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3026,7 +3026,7 @@ Transform:
   m_Children:
   - {fileID: 508997622}
   m_Father: {fileID: 986627143}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1381510601
 MonoBehaviour:
@@ -3055,6 +3055,7 @@ MonoBehaviour:
   _paintIconPaint: {fileID: 2800000, guid: a67415ddf13a6e84c987eaea2d5d6963, type: 3}
   _bombIconPaint: {fileID: 2800000, guid: d3863a691ec70f342af5ff96d65f90b6, type: 3}
   _inventoryIconPaint: {fileID: 2800000, guid: 28c527dec62a07a45870725ec2221e57, type: 3}
+  _crossIconPaint: {fileID: 2800000, guid: ea6b57c3523fbe747a0c6c34074c2a56, type: 3}
 --- !u!1 &1419230822
 GameObject:
   m_ObjectHideFlags: 0
@@ -3452,37 +3453,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1582908509}
   m_CullTransparentMesh: 1
---- !u!1 &1702982825
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1702982826}
-  m_Layer: 0
-  m_Name: LineManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1702982826
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702982825}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 986627143}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1726579895
 GameObject:
   m_ObjectHideFlags: 0
@@ -3903,7 +3873,7 @@ GameObject:
   - component: {fileID: 1975815263}
   - component: {fileID: 1975815262}
   m_Layer: 5
-  m_Name: Panel Detail (1)
+  m_Name: Panel Detail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

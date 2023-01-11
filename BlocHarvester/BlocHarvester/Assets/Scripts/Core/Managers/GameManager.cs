@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        DrillManager.Instance.DrillForStart();
+        BombManager.Instance.DrillForStart();
         GameInitialized = true;
     }
 
@@ -367,6 +367,7 @@ public class GameManager : MonoBehaviour
             if (SaveDataManager.Instance.Inventory[i].ToCreate.Count != 0)
             {
                 GameObject tempEquals = GameObject.Instantiate(_inventoryEquals, new Vector3(-5.5f, 0, i), Quaternion.identity);
+                tempEquals.transform.parent = _inventoryBlocAnchor;
             }
 
             _blocInventory[i] = tempBloc;
@@ -380,7 +381,8 @@ public class GameManager : MonoBehaviour
 
                 if (j < SaveDataManager.Instance.Inventory[i].ToCreate.Count - 1)
                 {
-                    GameObject.Instantiate(_inventoryPlus, new Vector3(-7.5f - (j * 2), 0, i), Quaternion.identity);
+                    GameObject tempPlus = GameObject.Instantiate(_inventoryPlus, new Vector3(-7.5f - (j * 2), 0, i), Quaternion.identity);
+                    tempPlus.transform.parent = _inventoryBlocAnchor;
                 }
             }
         }
@@ -396,16 +398,48 @@ public class GameManager : MonoBehaviour
         {
             tempInventory.Quantity += 1;
             _blocInventory[tempInventory.Index].GetComponent<BlocBehavior>().SetQuantity(tempInventory.Quantity);
+            _blocInventory[tempInventory.Index].GetComponent<BlocBehavior>().StartFX();
         }
+    }
+
+    public bool ColorAvailableInInventory(CMYColor color)
+    {
+        bool colorAvailable = false;
+
+        for (int i = 0; i < SaveDataManager.Instance.Inventory.Count; i++)
+        {
+            PaintInventory tempInventory = SaveDataManager.Instance.Inventory[i];
+
+            if (tempInventory != null && tempInventory.Color.ToString() == color.ToString())
+            {
+                colorAvailable = tempInventory.Infinite == true || tempInventory.Quantity > 0;
+                break;
+            }
+        }
+
+        Debug.Log(colorAvailable);
+
+        return colorAvailable;
     }
 
     public void SetCurrentPaint(CMYColor color)
     {
         for (int i = 0; i < SaveDataManager.Instance.Inventory.Count; i++)
         {
-            if (SaveDataManager.Instance.Inventory[i].Color.ToString() == color.ToString())
+            PaintInventory tempInventory = SaveDataManager.Instance.Inventory[i];
+
+            if (tempInventory != null && tempInventory.Color.ToString() == color.ToString())
             {
-                _currentPaint = i;
+                if ((tempInventory.Infinite == true) || (tempInventory.Quantity > 0))
+                {
+                    _currentPaint = i;
+                    SFXManager.Instance.PlaySelectionSound();
+                }
+                else
+                {
+                    SFXManager.Instance.PlayErrorSound();
+                }
+
                 break;
             }
         }

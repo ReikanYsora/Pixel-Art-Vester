@@ -209,9 +209,9 @@ GameObject:
   - component: {fileID: 795876898838358052}
   - component: {fileID: 9083065803404702971}
   - component: {fileID: 3875404050501993427}
-  - component: {fileID: 3186189010195319244}
   - component: {fileID: 5626812406855476649}
   - component: {fileID: 7611411092590432481}
+  - component: {fileID: 3071182752435756334}
   m_Layer: 8
   m_Name: InventoryBloc
   m_TagString: Untagged
@@ -299,20 +299,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: d5f798f1d8f17c341b3d8fddcffe001b, type: 3}
---- !u!114 &3186189010195319244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5368757092128395344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2abcb1dbacde76d47a8f7f5a541fa4ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsHarvestable: 0
-  _quantityText: {fileID: 2964425140761853977}
 --- !u!54 &5626812406855476649
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -349,3 +335,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &3071182752435756334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368757092128395344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e31c87b9b717ae4393da42fd867a262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _quantityText: {fileID: 2964425140761853977}
